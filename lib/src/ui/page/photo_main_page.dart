@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photo/src/delegate/badge_delegate.dart';
 import 'package:photo/src/delegate/loading_delegate.dart';
 import 'package:photo/src/engine/lru_cache.dart';
@@ -110,54 +111,60 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
 
   @override
   Widget build(BuildContext context) {
+    SystemUiOverlayStyle _overlayStyle = ThemeData.estimateBrightnessForColor(options.themeColor) == Brightness.dark
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
     var textStyle = TextStyle(
       color: options.textColor,
       fontSize: 14.0,
     );
-    return Theme(
-      data: Theme.of(context).copyWith(primaryColor: options.themeColor),
-      child: DefaultTextStyle(
-        style: textStyle,
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(
-                Icons.close,
-                color: options.textColor,
-              ),
-              onPressed: _cancel,
-            ),
-            title: Text(
-              i18nProvider.getTitleText(options),
-              style: TextStyle(
-                color: options.textColor,
-                fontSize: 18,
-              ),
-            ),
-            centerTitle: true,
-            actions: <Widget>[
-              FlatButton(
-                splashColor: Colors.transparent,
-                child: Text(
-                  i18nProvider.getSureText(options, selectedCount),
-                  style: selectedCount == 0
-                      ? textStyle.copyWith(color: options.disableColor)
-                      : textStyle.copyWith(color: options.enableColor),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _overlayStyle,
+      child: Theme(
+        data: Theme.of(context).copyWith(primaryColor: options.themeColor),
+        child: DefaultTextStyle(
+          style: textStyle,
+          child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: options.textColor,
                 ),
-                onPressed: selectedCount == 0 ? null : sure,
+                onPressed: _cancel,
               ),
-            ],
-          ),
-          body: _buildBody(),
-          bottomNavigationBar: _BottomWidget(
-            key: scaffoldKey,
-            provider: i18nProvider,
-            options: options,
-            galleryName: currentGalleryName,
-            onGalleryChange: _onGalleryChange,
-            onTapPreview: selectedList.isEmpty ? null : _onTapPreview,
-            selectedProvider: this,
-            galleryListProvider: this,
+              title: Text(
+                i18nProvider.getTitleText(options),
+                style: TextStyle(
+                  color: options.textColor,
+                  fontSize: 18,
+                ),
+              ),
+              centerTitle: true,
+              actions: <Widget>[
+                FlatButton(
+                  splashColor: Colors.transparent,
+                  child: Text(
+                    i18nProvider.getSureText(options, selectedCount),
+                    style: selectedCount == 0
+                        ? textStyle.copyWith(color: options.disableColor)
+                        : textStyle.copyWith(color: options.enableColor),
+                  ),
+                  onPressed: selectedCount == 0 ? null : sure,
+                ),
+              ],
+            ),
+            body: _buildBody(),
+            bottomNavigationBar: _BottomWidget(
+              key: scaffoldKey,
+              provider: i18nProvider,
+              options: options,
+              galleryName: currentGalleryName,
+              onGalleryChange: _onGalleryChange,
+              onTapPreview: selectedList.isEmpty ? null : _onTapPreview,
+              selectedProvider: this,
+              galleryListProvider: this,
+            ),
           ),
         ),
       ),

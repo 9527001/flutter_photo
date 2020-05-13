@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:photo/src/entity/options.dart';
 import 'package:photo/src/provider/asset_provider.dart';
 import 'package:photo/src/provider/config_provider.dart';
@@ -44,6 +45,7 @@ class PhotoPreviewPage extends StatefulWidget {
 
 class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   PhotoPickerProvider get config => PhotoPickerProvider.of(context);
+
   AssetProvider get assetProvider => widget.assetProvider;
 
   Options get options => config.options;
@@ -110,6 +112,9 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemUiOverlayStyle _overlayStyle = ThemeData.estimateBrightnessForColor(options.themeColor) == Brightness.dark
+        ? SystemUiOverlayStyle.light
+        : SystemUiOverlayStyle.dark;
     int totalCount = assetProvider.current.assetCount ?? 0;
     if (!widget.isPreview) {
       totalCount = assetProvider.current.assetCount;
@@ -122,52 +127,57 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
       color: options.textColor,
       fontSize: 14.0,
     );
-    return Theme(
-      data: data.copyWith(
-        primaryColor: options.themeColor,
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: config.options.themeColor,
-          leading: BackButton(
-            color: options.textColor,
-          ),
-          title: StreamBuilder(
-            stream: pageStream,
-            initialData: widget.initIndex,
-            builder: (ctx, snap) {
-              return Text(
-                "${snap.data + 1}/$totalCount",
-                style: TextStyle(
-                  color: options.textColor,
-                ),
-              );
-            },
-          ),
-          actions: <Widget>[
-            StreamBuilder(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _overlayStyle,
+      child: Theme(
+        data: data.copyWith(
+          primaryColor: options.themeColor,
+        ),
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: config.options.themeColor,
+            leading: BackButton(
+              color: options.textColor,
+            ),
+            centerTitle: true,
+            title: StreamBuilder(
               stream: pageStream,
-              builder: (ctx, s) => FlatButton(
-                splashColor: Colors.transparent,
-                onPressed: selectedList.length == 0 ? null : sure,
-                child: Text(
-                  config.provider.getSureText(options, selectedList.length),
-                  style: selectedList.length == 0
-                      ? textStyle.copyWith(color: options.disableColor)
-                      : textStyle,
+              initialData: widget.initIndex,
+              builder: (ctx, snap) {
+                return Text(
+                  "${snap.data + 1}/$totalCount",
+                  style: TextStyle(
+                    color: options.textColor,
+                    fontSize: 18,
+                  ),
+                );
+              },
+            ),
+            actions: <Widget>[
+              StreamBuilder(
+                stream: pageStream,
+                builder: (ctx, s) => FlatButton(
+                  splashColor: Colors.transparent,
+                  onPressed: selectedList.length == 0 ? null : sure,
+                  child: Text(
+                    config.provider.getSureText(options, selectedList.length),
+                    style: selectedList.length == 0
+                        ? textStyle.copyWith(color: options.disableColor)
+                        : textStyle.copyWith(color: options.enableColor),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+          body: PageView.builder(
+            controller: pageController,
+            itemBuilder: _buildItem,
+            itemCount: totalCount,
+            onPageChanged: _onPageChanged,
+          ),
+          bottomSheet: _buildThumb(),
+          bottomNavigationBar: _buildBottom(),
         ),
-        body: PageView.builder(
-          controller: pageController,
-          itemBuilder: _buildItem,
-          itemCount: totalCount,
-          onPageChanged: _onPageChanged,
-        ),
-        bottomSheet: _buildThumb(),
-        bottomNavigationBar: _buildBottom(),
       ),
     );
   }
@@ -206,11 +216,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
               IgnorePointer(
                 child: _buildCheckboxContent(checked, index),
               ),
-              Positioned(
-                top: 0.0,
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
+              Positioned.fill(
                 child: GestureDetector(
                   onTap: () => _changeSelected(!checked, index),
                   behavior: HitTestBehavior.translucent,
@@ -283,8 +289,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   }
 
   Widget _buildLoadingWidget(AssetEntity entity) {
-    return options.loadingDelegate
-        .buildBigImageLoading(context, entity, themeColor);
+    return options.loadingDelegate.buildBigImageLoading(context, entity, themeColor);
   }
 
   void _onPageChanged(int value) {
@@ -364,8 +369,7 @@ class BigPhotoImage extends StatefulWidget {
   _BigPhotoImageState createState() => _BigPhotoImageState();
 }
 
-class _BigPhotoImageState extends State<BigPhotoImage>
-    with AutomaticKeepAliveClientMixin {
+class _BigPhotoImageState extends State<BigPhotoImage> with AutomaticKeepAliveClientMixin {
   Widget get loadingWidget {
     return widget.loadingWidget ?? Container();
   }
@@ -376,8 +380,7 @@ class _BigPhotoImageState extends State<BigPhotoImage>
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return FutureBuilder(
-      future:
-          widget.assetEntity.thumbDataWithSize(width.floor(), height.floor()),
+      future: widget.assetEntity.thumbDataWithSize(width.floor(), height.floor()),
       builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
         var file = snapshot.data;
         if (snapshot.connectionState == ConnectionState.done && file != null) {
