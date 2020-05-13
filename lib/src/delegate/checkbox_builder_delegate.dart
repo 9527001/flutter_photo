@@ -42,7 +42,7 @@ class DefaultCheckBoxBuilderDelegate extends CheckBoxBuilderDelegate {
         title: Text(
           i18nProvider.getSelectedOptionsText(options),
           textAlign: TextAlign.end,
-          style: TextStyle(color: options.textColor),
+          style: TextStyle(color: options.enableColor ?? options.textColor),
         ),
       ),
     );
@@ -75,7 +75,7 @@ class RadioCheckBoxBuilderDelegate extends CheckBoxBuilderDelegate {
         title: Text(
           i18nProvider.getSelectedOptionsText(options),
           textAlign: TextAlign.end,
-          style: TextStyle(color: options.textColor, fontSize: 14.0),
+          style: TextStyle(color: options.enableColor ?? options.textColor, fontSize: 14.0),
         ),
         groupValue: checked,
         controlAffinity: ListTileControlAffinity.trailing,

@@ -65,7 +65,7 @@ class __BottomWidgetState extends State<_BottomWidget> {
               ),
               FlatButton(
                 onPressed: widget.onTapPreview,
-                textColor: options.textColor,
+                textColor: options.enableColor ?? options.textColor,
                 splashColor: Colors.transparent,
                 disabledTextColor: options.disableColor,
                 child: Container(

@@ -35,13 +35,12 @@ class PhotoMainPage extends StatefulWidget {
   _PhotoMainPageState createState() => _PhotoMainPageState();
 }
 
-class _PhotoMainPageState extends State<PhotoMainPage>
-    with SelectedProvider, GalleryListProvider {
+class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, GalleryListProvider {
   Options get options => widget.options;
 
   I18nProvider get i18nProvider => PhotoPickerProvider.of(context).provider;
-  AssetProvider get assetProvider =>
-      PhotoPickerProvider.of(context).assetProvider;
+
+  AssetProvider get assetProvider => PhotoPickerProvider.of(context).assetProvider;
 
   List<AssetEntity> get list => assetProvider.data;
 
@@ -132,16 +131,16 @@ class _PhotoMainPageState extends State<PhotoMainPage>
               i18nProvider.getTitleText(options),
               style: TextStyle(
                 color: options.textColor,
+                fontSize: 18,
               ),
             ),
+            centerTitle: true,
             actions: <Widget>[
               FlatButton(
                 splashColor: Colors.transparent,
                 child: Text(
                   i18nProvider.getSureText(options, selectedCount),
-                  style: selectedCount == 0
-                      ? textStyle.copyWith(color: options.disableColor)
-                      : textStyle,
+                  style: selectedCount == 0 ? textStyle.copyWith(color: options.disableColor) : textStyle.copyWith(color: options.enableColor),
                 ),
                 onPressed: selectedCount == 0 ? null : sure,
               ),
@@ -222,8 +221,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
         pathList = await PhotoManager.getAssetPathList(type: RequestType.video);
         break;
       default:
-        pathList = await PhotoManager.getAssetPathList(
-            type: RequestType.image | RequestType.video);
+        pathList = await PhotoManager.getAssetPathList(type: RequestType.image | RequestType.video);
     }
 
     _onRefreshAssetPathList(pathList);
@@ -341,7 +339,19 @@ class _PhotoMainPageState extends State<PhotoMainPage>
   Widget _buildText(AssetEntity entity) {
     var isSelected = containsEntity(entity);
     Widget child;
-    BoxDecoration decoration;
+    BoxDecoration decoration = options.topRightDecoration;
+    if (decoration == null) {
+      if (isSelected) {
+        decoration = BoxDecoration(color: themeColor);
+      } else {
+        decoration = BoxDecoration(
+          borderRadius: BorderRadius.circular(1.0),
+          border: Border.all(
+            color: themeColor,
+          ),
+        );
+      }
+    }
     if (isSelected) {
       child = Text(
         (indexOfSelected(entity) + 1).toString(),
@@ -351,17 +361,9 @@ class _PhotoMainPageState extends State<PhotoMainPage>
           color: options.textColor,
         ),
       );
-      decoration = BoxDecoration(color: themeColor);
-    } else {
-      decoration = BoxDecoration(
-        borderRadius: BorderRadius.circular(1.0),
-        border: Border.all(
-          color: themeColor,
-        ),
-      );
     }
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(5.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         decoration: decoration,
@@ -508,7 +510,7 @@ class _PhotoMainPageState extends State<PhotoMainPage>
         pathList = await PhotoManager.getAssetPathList(type: RequestType.image);
         break;
       case PickType.onlyVideo:
-        pathList = await PhotoManager.getAssetPathList(type: RequestType.image);
+        pathList = await PhotoManager.getAssetPathList(type: RequestType.video);
         break;
       default:
         pathList = await PhotoManager.getAssetPathList();

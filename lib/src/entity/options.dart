@@ -19,6 +19,8 @@ class Options {
 
   final Color textColor;
 
+  final Color enableColor;
+
   final Color disableColor;
 
   final int thumbSize;
@@ -33,6 +35,8 @@ class Options {
 
   final PickType pickType;
 
+  final BoxDecoration topRightDecoration;
+
   const Options({
     this.rowCount,
     this.maxSelected,
@@ -41,6 +45,7 @@ class Options {
     this.themeColor,
     this.dividerColor,
     this.textColor,
+    this.enableColor,
     this.disableColor,
     this.thumbSize,
     this.sortDelegate,
@@ -48,6 +53,7 @@ class Options {
     this.loadingDelegate,
     this.badgeDelegate,
     this.pickType,
+    this.topRightDecoration,
   });
 }
 

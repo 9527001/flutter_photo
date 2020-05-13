@@ -3,25 +3,23 @@ library photo;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:photo/src/engine/lru_cache.dart';
-
-import 'package:photo_manager/photo_manager.dart';
-
 import 'package:photo/src/delegate/badge_delegate.dart';
 import 'package:photo/src/delegate/checkbox_builder_delegate.dart';
 import 'package:photo/src/delegate/loading_delegate.dart';
 import 'package:photo/src/delegate/sort_delegate.dart';
+import 'package:photo/src/engine/lru_cache.dart';
 import 'package:photo/src/entity/options.dart';
 import 'package:photo/src/provider/i18n_provider.dart';
 import 'package:photo/src/ui/dialog/not_permission_dialog.dart';
 import 'package:photo/src/ui/photo_app.dart';
+import 'package:photo_manager/photo_manager.dart';
+
+export 'package:photo/src/delegate/badge_delegate.dart';
 export 'package:photo/src/delegate/checkbox_builder_delegate.dart';
 export 'package:photo/src/delegate/loading_delegate.dart';
 export 'package:photo/src/delegate/sort_delegate.dart';
-export 'package:photo/src/provider/i18n_provider.dart'
-    show I18NCustomProvider, I18nProvider, CNProvider, ENProvider;
 export 'package:photo/src/entity/options.dart' show PickType;
-export 'package:photo/src/delegate/badge_delegate.dart';
+export 'package:photo/src/provider/i18n_provider.dart' show I18NCustomProvider, I18nProvider, CNProvider, ENProvider;
 
 class PhotoPicker {
   static PhotoPicker _instance;
@@ -84,6 +82,7 @@ class PhotoPicker {
     Color themeColor,
     Color dividerColor,
     Color textColor,
+    Color enableColor,
     Color disableColor,
     int thumbSize = 64,
     I18nProvider provider = I18nProvider.chinese,
@@ -91,6 +90,7 @@ class PhotoPicker {
     CheckBoxBuilderDelegate checkBoxBuilderDelegate,
     LoadingDelegate loadingDelegate,
     PickType pickType = PickType.all,
+    BoxDecoration topRightDecoration,
     BadgeDelegate badgeDelegate = const DefaultBadgeDelegate(),
     List<AssetPathEntity> photoPathList,
     List<AssetEntity> pickedAssetList,
@@ -101,6 +101,7 @@ class PhotoPicker {
 
     themeColor ??= Theme.of(context)?.primaryColor ?? Colors.black;
     dividerColor ??= Theme.of(context)?.dividerColor ?? Colors.grey;
+    enableColor ??= Theme.of(context)?.primaryColor ?? Colors.black;
     disableColor ??= Theme.of(context)?.disabledColor ?? Colors.grey;
     textColor ??= Colors.white;
 
@@ -115,6 +116,7 @@ class PhotoPicker {
       maxSelected: maxSelected,
       itemRadio: itemRadio,
       padding: padding,
+      enableColor: enableColor,
       disableColor: disableColor,
       textColor: textColor,
       themeColor: themeColor,
@@ -124,6 +126,7 @@ class PhotoPicker {
       loadingDelegate: loadingDelegate,
       badgeDelegate: badgeDelegate,
       pickType: pickType,
+      topRightDecoration: topRightDecoration,
     );
 
     return PhotoPicker()._pickAsset(
