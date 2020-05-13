@@ -140,7 +140,9 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
                 splashColor: Colors.transparent,
                 child: Text(
                   i18nProvider.getSureText(options, selectedCount),
-                  style: selectedCount == 0 ? textStyle.copyWith(color: options.disableColor) : textStyle.copyWith(color: options.enableColor),
+                  style: selectedCount == 0
+                      ? textStyle.copyWith(color: options.disableColor)
+                      : textStyle.copyWith(color: options.enableColor),
                 ),
                 onPressed: selectedCount == 0 ? null : sure,
               ),
@@ -339,20 +341,9 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
   Widget _buildText(AssetEntity entity) {
     var isSelected = containsEntity(entity);
     Widget child;
-    BoxDecoration decoration = options.topRightDecoration;
-    if (decoration == null) {
-      if (isSelected) {
-        decoration = BoxDecoration(color: themeColor);
-      } else {
-        decoration = BoxDecoration(
-          borderRadius: BorderRadius.circular(1.0),
-          border: Border.all(
-            color: themeColor,
-          ),
-        );
-      }
-    }
+    BoxDecoration decoration;
     if (isSelected) {
+      decoration = BoxDecoration(color: themeColor);
       child = Text(
         (indexOfSelected(entity) + 1).toString(),
         textAlign: TextAlign.center,
@@ -361,6 +352,14 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
           color: options.textColor,
         ),
       );
+    } else {
+      decoration = options.topRightDecoration ??
+          BoxDecoration(
+            borderRadius: BorderRadius.circular(1.0),
+            border: Border.all(
+              color: themeColor,
+            ),
+          );
     }
     return Padding(
       padding: const EdgeInsets.all(5.0),
