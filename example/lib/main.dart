@@ -139,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
       padding: 1.0,
       // item padding
       dividerColor: Colors.grey,
+      enableColor: Colors.blue,
       // divider color
       disableColor: Colors.grey.shade300,
       // the check box disable color
@@ -149,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
       // provider: I18nProvider.english,
       provider: I18nProvider.chinese,
       // i18n provider ,default is chinese. , you can custom I18nProvider or use ENProvider()
-      rowCount: 3,
+      rowCount: 4,
       // item row count
 
       thumbSize: 150,
@@ -172,6 +173,18 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
       pickType: type,
 
       photoPathList: pathList,
+
+      normalDecoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+
+      selectedDecoration: BoxDecoration(
+        color: Colors.blue,
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.blue, width: 1),
+      ),
     );
 
     if (imgList == null || imgList.isEmpty) {

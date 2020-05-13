@@ -326,8 +326,8 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     var currentSelected = containsEntity(entity);
     return Positioned(
       right: 0.0,
-      width: 36.0,
-      height: 36.0,
+      width: 30.0,
+      height: 30.0,
       child: GestureDetector(
         onTap: () {
           changeCheck(!currentSelected, entity);
@@ -343,17 +343,17 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     Widget child;
     BoxDecoration decoration;
     if (isSelected) {
-      decoration = BoxDecoration(color: themeColor);
+      decoration = options.selectedDecoration ?? BoxDecoration(color: themeColor);
       child = Text(
         (indexOfSelected(entity) + 1).toString(),
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 12.0,
+          fontSize: 13.0,
           color: options.textColor,
         ),
       );
     } else {
-      decoration = options.topRightDecoration ??
+      decoration = options.normalDecoration ??
           BoxDecoration(
             borderRadius: BorderRadius.circular(1.0),
             border: Border.all(
@@ -362,7 +362,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
           );
     }
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(4.0),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         decoration: decoration,

@@ -90,7 +90,8 @@ class PhotoPicker {
     CheckBoxBuilderDelegate checkBoxBuilderDelegate,
     LoadingDelegate loadingDelegate,
     PickType pickType = PickType.all,
-    BoxDecoration topRightDecoration,
+    BoxDecoration normalDecoration,
+    BoxDecoration selectedDecoration,
     BadgeDelegate badgeDelegate = const DefaultBadgeDelegate(),
     List<AssetPathEntity> photoPathList,
     List<AssetEntity> pickedAssetList,
@@ -126,7 +127,8 @@ class PhotoPicker {
       loadingDelegate: loadingDelegate,
       badgeDelegate: badgeDelegate,
       pickType: pickType,
-      topRightDecoration: topRightDecoration,
+      normalDecoration: normalDecoration,
+      selectedDecoration: selectedDecoration,
     );
 
     return PhotoPicker()._pickAsset(

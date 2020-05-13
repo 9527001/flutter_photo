@@ -35,7 +35,9 @@ class Options {
 
   final PickType pickType;
 
-  final BoxDecoration topRightDecoration;
+  final BoxDecoration normalDecoration;
+
+  final BoxDecoration selectedDecoration;
 
   const Options({
     this.rowCount,
@@ -53,7 +55,8 @@ class Options {
     this.loadingDelegate,
     this.badgeDelegate,
     this.pickType,
-    this.topRightDecoration,
+    this.normalDecoration,
+    this.selectedDecoration,
   });
 }
 
