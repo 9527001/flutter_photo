@@ -126,6 +126,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
           style: textStyle,
           child: Scaffold(
             appBar: AppBar(
+              brightness: ThemeData.estimateBrightnessForColor(options.themeColor),
               leading: IconButton(
                 icon: Icon(
                   Icons.close,
