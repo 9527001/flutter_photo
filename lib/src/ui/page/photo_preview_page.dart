@@ -113,8 +113,8 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
   @override
   Widget build(BuildContext context) {
     SystemUiOverlayStyle _overlayStyle = ThemeData.estimateBrightnessForColor(options.themeColor) == Brightness.dark
-        ? SystemUiOverlayStyle.light
-        : SystemUiOverlayStyle.dark;
+        ? SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent)
+        : SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent);
     int totalCount = assetProvider.current.assetCount ?? 0;
     if (!widget.isPreview) {
       totalCount = assetProvider.current.assetCount;

@@ -112,8 +112,8 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
   @override
   Widget build(BuildContext context) {
     SystemUiOverlayStyle _overlayStyle = ThemeData.estimateBrightnessForColor(options.themeColor) == Brightness.dark
-        ? SystemUiOverlayStyle.light
-        : SystemUiOverlayStyle.dark;
+        ? SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent)
+        : SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent);
     var textStyle = TextStyle(
       color: options.textColor,
       fontSize: 14.0,

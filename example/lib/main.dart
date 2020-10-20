@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:photo/photo.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -8,7 +11,14 @@ import './preview.dart';
 import 'icon_text_button.dart';
 import 'picked_example.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  if (Platform.isAndroid) {
+    // 设置Android头部的导航栏透明
+    SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  }
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -18,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Pick Image Demo',
         theme: ThemeData(
-          primarySwatch: Colors.lime,
+          primarySwatch: Colors.white,
         ),
         home: MyHomePage(title: 'Pick Image Demo'),
       ),
@@ -67,48 +77,60 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          FlatButton(
-            child: Icon(Icons.image),
-            onPressed: _testPhotoListParams,
-          ),
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              IconTextButton(
-                icon: Icons.photo,
-                text: "photo",
-                onTap: () => _pickAsset(PickType.onlyImage),
-              ),
-              IconTextButton(
-                icon: Icons.videocam,
-                text: "video",
-                onTap: () => _pickAsset(PickType.onlyVideo),
-              ),
-              IconTextButton(
-                icon: Icons.album,
-                text: "all",
-                onTap: () => _pickAsset(PickType.all),
-              ),
-              IconTextButton(
-                icon: CupertinoIcons.reply_all,
-                text: "Picked asset example.",
-                onTap: () => routePage(PickedExample()),
-              ),
-            ],
+    bool dark = ThemeData.estimateBrightnessForColor(Colors.white) == Brightness.dark;
+    SystemUiOverlayStyle _overlayStyle = dark
+        ? SystemUiOverlayStyle.light.copyWith(
+      statusBarColor: Colors.transparent,
+    )
+        : SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent,
+    );
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: _overlayStyle,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+          backgroundColor: Colors.white,
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(Icons.image),
+              onPressed: _testPhotoListParams,
+            ),
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                IconTextButton(
+                  icon: Icons.photo,
+                  text: "photo",
+                  onTap: () => _pickAsset(PickType.onlyImage),
+                ),
+                IconTextButton(
+                  icon: Icons.videocam,
+                  text: "video",
+                  onTap: () => _pickAsset(PickType.onlyVideo),
+                ),
+                IconTextButton(
+                  icon: Icons.album,
+                  text: "all",
+                  onTap: () => _pickAsset(PickType.all),
+                ),
+                IconTextButton(
+                  icon: CupertinoIcons.reply_all,
+                  text: "Picked asset example.",
+                  onTap: () => routePage(PickedExample()),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _pickAsset(PickType.all),
-        tooltip: 'pickImage',
-        child: Icon(Icons.add),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _pickAsset(PickType.all),
+          tooltip: 'pickImage',
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
@@ -131,10 +153,10 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
       context: context,
 
       /// The following are optional parameters.
-      themeColor: Colors.green,
+      themeColor: Colors.white,
       // the title color and bottom color
 
-      textColor: Colors.white,
+      textColor: Colors.black,
       // text color
       padding: 1.0,
       // item padding
