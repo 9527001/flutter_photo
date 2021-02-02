@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:photo/src/delegate/badge_delegate.dart';
 import 'package:photo/src/delegate/checkbox_builder_delegate.dart';
+import 'package:photo/src/delegate/empty_delegate.dart';
 import 'package:photo/src/delegate/loading_delegate.dart';
 import 'package:photo/src/delegate/sort_delegate.dart';
 import 'package:photo/src/engine/lru_cache.dart';
@@ -89,6 +90,7 @@ class PhotoPicker {
     SortDelegate sortDelegate,
     CheckBoxBuilderDelegate checkBoxBuilderDelegate,
     LoadingDelegate loadingDelegate,
+    EmptyDelegate emptyDelegate,
     PickType pickType = PickType.all,
     BoxDecoration normalDecoration,
     BoxDecoration selectedDecoration,
@@ -111,6 +113,8 @@ class PhotoPicker {
 
     loadingDelegate ??= DefaultLoadingDelegate();
 
+    emptyDelegate ??= DefaultEmptyDelegate();
+
     var options = Options(
       rowCount: rowCount,
       dividerColor: dividerColor,
@@ -125,6 +129,7 @@ class PhotoPicker {
       sortDelegate: sortDelegate,
       checkBoxBuilderDelegate: checkBoxBuilderDelegate,
       loadingDelegate: loadingDelegate,
+      emptyDelegate: emptyDelegate,
       badgeDelegate: badgeDelegate,
       pickType: pickType,
       normalDecoration: normalDecoration,

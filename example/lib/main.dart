@@ -27,9 +27,7 @@ class MyApp extends StatelessWidget {
     return OKToast(
       child: MaterialApp(
         title: 'Pick Image Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.white,
-        ),
+        theme: ThemeData(),
         home: MyHomePage(title: 'Pick Image Demo'),
       ),
     );
@@ -44,12 +42,11 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
+class _MyHomePageState extends State<MyHomePage> with LoadingDelegate, WidgetsBindingObserver {
   String currentSelected = "";
 
   @override
-  Widget buildBigImageLoading(
-      BuildContext context, AssetEntity entity, Color themeColor) {
+  Widget buildBigImageLoading(BuildContext context, AssetEntity entity, Color themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -62,8 +59,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   }
 
   @override
-  Widget buildPreviewLoading(
-      BuildContext context, AssetEntity entity, Color themeColor) {
+  Widget buildPreviewLoading(BuildContext context, AssetEntity entity, Color themeColor) {
     return Center(
       child: Container(
         width: 50.0,
@@ -80,11 +76,11 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
     bool dark = ThemeData.estimateBrightnessForColor(Colors.white) == Brightness.dark;
     SystemUiOverlayStyle _overlayStyle = dark
         ? SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: Colors.transparent,
-    )
+            statusBarColor: Colors.transparent,
+          )
         : SystemUiOverlayStyle.dark.copyWith(
-      statusBarColor: Colors.transparent,
-    );
+            statusBarColor: Colors.transparent,
+          );
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: _overlayStyle,
       child: Scaffold(
@@ -136,8 +132,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
   }
 
   void _testPhotoListParams() async {
-    var assetPathList =
-        await PhotoManager.getAssetPathList(type: RequestType.image);
+    var assetPathList = await PhotoManager.getAssetPathList(type: RequestType.image);
     _pickAsset(PickType.all, pathList: assetPathList);
   }
 
@@ -222,8 +217,7 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
 
       List<AssetEntity> preview = [];
       preview.addAll(imgList);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (_) => PreviewPage(list: preview)));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => PreviewPage(list: preview)));
     }
     setState(() {});
   }
@@ -237,5 +231,33 @@ class _MyHomePageState extends State<MyHomePage> with LoadingDelegate {
         },
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("--" + state.toString());
+    switch (state) {
+      case AppLifecycleState.inactive: // 处于这种状态的应用程序应该假设它们可能在任何时候暂停。
+        break;
+      case AppLifecycleState.resumed: // 应用程序可见，前台
+        setState(() {});
+        break;
+      case AppLifecycleState.paused: // 应用程序不可见，后台
+        break;
+      case AppLifecycleState.detached:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }

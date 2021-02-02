@@ -28,7 +28,7 @@ class AssetProvider {
 
   AssetPaging getPaging() => _dataMap[current];
 
-  bool get noMore => getPaging()?.noMore ?? false;
+  bool get noMore => getPaging()?.noMore ?? true;
 
   int get count => data?.length ?? 0;
 }

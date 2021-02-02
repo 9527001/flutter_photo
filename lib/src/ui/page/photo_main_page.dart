@@ -18,6 +18,7 @@ import 'package:photo/src/ui/page/photo_preview_page.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 part './main/bottom_widget.dart';
+
 part './main/image_item.dart';
 
 class PhotoMainPage extends StatefulWidget {
@@ -147,9 +148,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
                   splashColor: Colors.transparent,
                   child: Text(
                     i18nProvider.getSureText(options, selectedCount),
-                    style: selectedCount == 0
-                        ? textStyle.copyWith(color: options.disableColor)
-                        : textStyle.copyWith(color: options.enableColor),
+                    style: selectedCount == 0 ? textStyle.copyWith(color: options.disableColor) : textStyle.copyWith(color: options.enableColor),
                   ),
                   onPressed: selectedCount == 0 ? null : sure,
                 ),
@@ -271,7 +270,9 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
     final noMore = assetProvider.noMore;
 
     final count = assetProvider.count + (noMore ? 0 : 1);
-
+    if (noMore && count == 0) {
+      return options.emptyDelegate.buildEmpty(context, themeColor);
+    }
     return Container(
       color: options.dividerColor,
       child: GridView.builder(
