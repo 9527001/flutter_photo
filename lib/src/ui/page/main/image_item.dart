@@ -31,8 +31,7 @@ class ImageItem extends StatelessWidget {
       future: entity.thumbDataWithSize(size, size),
       builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
         var futureData = snapshot.data;
-        if (snapshot.connectionState == ConnectionState.done &&
-            futureData != null) {
+        if (snapshot.connectionState == ConnectionState.done && futureData != null) {
           ImageLruCache.setData(entity, size, futureData);
           return _buildImageItem(context, futureData);
         }
@@ -50,13 +49,14 @@ class ImageItem extends StatelessWidget {
   Widget _buildImageItem(BuildContext context, Uint8List data) {
     var image = Image.memory(
       data,
-      width: double.infinity,
-      height: double.infinity,
+      width: double.parse(size.toString()),
+      height: double.parse(size.toString()),
+      cacheWidth: size,
+      cacheHeight: size,
       fit: BoxFit.cover,
     );
     var badge;
-    final badgeBuilder =
-        badgeDelegate?.buildBadge(context, entity.type, entity.videoDuration);
+    final badgeBuilder = badgeDelegate?.buildBadge(context, entity.type, entity.videoDuration);
     if (badgeBuilder == null) {
       badge = Container();
     } else {

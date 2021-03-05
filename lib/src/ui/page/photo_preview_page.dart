@@ -162,9 +162,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
                   onPressed: selectedList.length == 0 ? null : sure,
                   child: Text(
                     config.provider.getSureText(options, selectedList.length),
-                    style: selectedList.length == 0
-                        ? textStyle.copyWith(color: options.disableColor)
-                        : textStyle.copyWith(color: options.enableColor),
+                    style: selectedList.length == 0 ? textStyle.copyWith(color: options.disableColor) : textStyle.copyWith(color: options.enableColor),
                   ),
                 ),
               ),
@@ -389,8 +387,10 @@ class _BigPhotoImageState extends State<BigPhotoImage> with AutomaticKeepAliveCl
           return Image.memory(
             file,
             fit: BoxFit.contain,
-            width: double.infinity,
-            height: double.infinity,
+            width: width,
+            height: height,
+            cacheWidth: width.toInt(),
+            cacheHeight: height.toInt(),
           );
         }
         return loadingWidget;
