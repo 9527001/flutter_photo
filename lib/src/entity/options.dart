@@ -42,7 +42,11 @@ class Options {
 
   final BoxDecoration selectedDecoration;
 
+  /// 预览图图片内存显示比例 默认1.2
+  final double imageSizeRadio;
+
   const Options({
+    this.imageSizeRadio,
     this.rowCount,
     this.maxSelected,
     this.padding,

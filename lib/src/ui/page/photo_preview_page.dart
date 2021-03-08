@@ -28,6 +28,9 @@ class PhotoPreviewPage extends StatefulWidget {
 
   final AssetProvider assetProvider;
 
+  ///图片显示比例 默认1.2
+  final double imageSizeRadio;
+
   const PhotoPreviewPage({
     Key key,
     @required this.selectedProvider,
@@ -37,6 +40,7 @@ class PhotoPreviewPage extends StatefulWidget {
     @required this.assetProvider,
     this.initIndex = 0,
     this.isPreview = false,
+    this.imageSizeRadio,
   }) : super(key: key);
 
   @override
@@ -280,6 +284,7 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
     return BigPhotoImage(
       assetEntity: data,
       loadingWidget: _buildLoadingWidget(data),
+      imageSizeRadio: widget.imageSizeRadio,
     );
   }
 
@@ -357,11 +362,13 @@ class _PhotoPreviewPageState extends State<PhotoPreviewPage> {
 class BigPhotoImage extends StatefulWidget {
   final AssetEntity assetEntity;
   final Widget loadingWidget;
+  final double imageSizeRadio;
 
   const BigPhotoImage({
     Key key,
     this.assetEntity,
     this.loadingWidget,
+    this.imageSizeRadio = 1.2,
   }) : super(key: key);
 
   @override
@@ -383,14 +390,15 @@ class _BigPhotoImageState extends State<BigPhotoImage> with AutomaticKeepAliveCl
       builder: (BuildContext context, AsyncSnapshot<Uint8List> snapshot) {
         var file = snapshot.data;
         if (snapshot.connectionState == ConnectionState.done && file != null) {
-          print(file.length);
+          // print(file.length);
+          double aspect = widget.assetEntity.height / widget.assetEntity.width;
           return Image.memory(
             file,
             fit: BoxFit.contain,
-            width: width,
-            height: height,
-            cacheWidth: width.toInt(),
-            cacheHeight: height.toInt(),
+            width: widget.assetEntity.width.toDouble(),
+            height: widget.assetEntity.height.toDouble(),
+            cacheWidth: (width * widget.imageSizeRadio).toInt(),
+            cacheHeight: (width * aspect * widget.imageSizeRadio).toInt(),
           );
         }
         return loadingWidget;

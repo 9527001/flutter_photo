@@ -425,6 +425,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
               result: result,
               isPreview: false,
               assetProvider: assetProvider,
+              imageSizeRadio: options.itemRadio,
             ),
           );
         },
@@ -454,6 +455,7 @@ class _PhotoMainPageState extends State<PhotoMainPage> with SelectedProvider, Ga
             result: result,
             isPreview: true,
             assetProvider: assetProvider,
+            imageSizeRadio: options.itemRadio,
           ),
         ),
       ),

@@ -49,10 +49,8 @@ class ImageItem extends StatelessWidget {
   Widget _buildImageItem(BuildContext context, Uint8List data) {
     var image = Image.memory(
       data,
-      width: double.parse(size.toString()),
-      height: double.parse(size.toString()),
-      cacheWidth: size,
-      cacheHeight: size,
+      width: double.infinity,
+      height: double.infinity,
       fit: BoxFit.cover,
     );
     var badge;
